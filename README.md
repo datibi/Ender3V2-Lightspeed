@@ -4,7 +4,23 @@
 
 ## Ender 3 V2 Edition
 
-Please test this firmware and let us know if it misbehaves in any way.
+Forked from Marlin -> Miguel Risco-Castillo professional Firmware
+<BR/>
+This for has:
+- Built so far for 4.2.2
+- All G-codes required by LaserGRBL for basic functionality. 
+- Engrave from SD card (added *.N* extension)
+- Laser mode option in advanced settings (but pretty much useless)
+- M3 S<power>: turns on "laser mode": 50Hz PWM, heaters&fan disabled
+- M5: restores normal operation mode, 7Hz PWM
+<BR/>
+- Bugs to solve: preheat from LCD works even in laser mode, M84 without parameter brings up a confirm dialog
+
+Please test this firmware and let me know if it misbehaves in any way.
+<BR/>
+Please don't forget to disconnect laser before printing :)
+<BR/>
+
 Precompiled binary files coming later....
 
 
