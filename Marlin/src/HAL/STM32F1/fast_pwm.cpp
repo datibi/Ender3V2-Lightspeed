@@ -40,6 +40,11 @@ inline uint8_t timer_and_index_for_pin(const pin_t pin, timer_dev **timer_ptr) {
 
 void set_pwm_duty(const pin_t pin, const uint16_t v, const uint16_t v_size/*=255*/, const bool invert/*=false*/) {
   const uint16_t duty = invert ? v_size - v : v;
+  IF (duty==0){
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW );
+  return;
+  }  
   if (PWM_PIN(pin)) {
     timer_dev *timer; UNUSED(timer);
     if (timer_freq[timer_and_index_for_pin(pin, &timer)] == 0)

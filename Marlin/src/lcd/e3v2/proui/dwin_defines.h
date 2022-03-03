@@ -52,7 +52,7 @@
 #define Def_Indicator_Color   Color_White
 #define Def_Coordinate_Color  Color_White
 
-#define HAS_GCODE_PREVIEW 1
+#define HAS_GCODE_PREVIEW 0
 #define HAS_ESDIAG 1
 #ifndef INDIVIDUAL_AXIS_HOMING_SUBMENU
   #define INDIVIDUAL_AXIS_HOMING_SUBMENU
@@ -110,7 +110,7 @@ typedef struct {
   #if ENABLED(PREHEAT_BEFORE_LEVELING) && defined(PREHEAT_1_TEMP_BED)
     int16_t BedLevT = PREHEAT_1_TEMP_BED;
   #endif
-  TERN_(BAUD_RATE_GCODE, bool Baud115K = false);
+  TERN_(BAUD_RATE_GCODE, bool Baud115K = true);
   bool FullManualTramming = false;
   #if ProUI
     TERN_(HAS_FILAMENT_SENSOR, bool Runout_active_state = FIL_RUNOUT_STATE);

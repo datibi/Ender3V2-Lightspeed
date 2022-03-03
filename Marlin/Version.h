@@ -28,13 +28,13 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.0.9.4 MRiscoC"
+#define SHORT_BUILD_VERSION "2.0.9.4 Tibor D"
 
 /**
  * Verbose version identifier which should contain a reference to the location
  * from where the binary was downloaded or the source code was compiled.
  */
-#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " 422 ManualMesh, based on bugfix-2.0.x"
+#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " 422 BLTouch, based on bugfix-2.0.x"
 
 /**
  * The STRING_DISTRIBUTION_DATE represents when the binary file was built,

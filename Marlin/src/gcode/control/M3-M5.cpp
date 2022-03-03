@@ -22,6 +22,10 @@
 
 #include "../../inc/MarlinConfig.h"
 
+#if HAS_EXTRUDERS
+#include "../../module/temperature.h"
+#endif
+
 #if HAS_CUTTER
 
 #include "../gcode.h"
@@ -66,6 +70,12 @@
  *  PWM duty cycle goes from 0 (off) to 255 (always on).
  */
 void GcodeSuite::M3_M4(const bool is_M4) {
+ LaserMode = true;
+ #if HAS_EXTRUDERS 
+  thermalManager.cooldown();
+  thermalManager.set_fan_speed(0, 0);
+ #endif
+
   #if EITHER(SPINDLE_LASER_USE_PWM, SPINDLE_SERVO)
     auto get_s_power = [] {
       if (parser.seenval('S')) {
@@ -126,6 +136,7 @@ void GcodeSuite::M3_M4(const bool is_M4) {
  * M5 - Cutter OFF (when moves are complete)
  */
 void GcodeSuite::M5() {
+  LaserMode = false;
   #if ENABLED(LASER_POWER_INLINE)
     if (parser.seen('I') == DISABLED(LASER_POWER_INLINE_INVERT)) {
       cutter.set_inline_enabled(false); // Laser power in inline mode

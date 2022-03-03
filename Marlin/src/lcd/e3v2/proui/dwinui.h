@@ -96,6 +96,8 @@
 #define ICON_Sound                ICON_Cool
 #define ICON_CaseLight            ICON_Motion
 #define ICON_LedControl           ICON_Motion
+#define ICON_Laser                ICON_SetBedTemp
+
 
 // Extended and default UI Colors
 #define Color_Black           0

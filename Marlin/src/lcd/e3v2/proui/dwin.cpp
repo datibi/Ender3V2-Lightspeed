@@ -541,7 +541,7 @@ void Draw_PrintDone() {
   Title.ShowCaption(GET_TEXT_F(MSG_PRINT_DONE));
   DWINUI::ClearMenuArea();
   DWIN_Print_Header(nullptr);
-  if (sdprint && Preview_Valid()) {
+  if (sdprint /*&& Preview_Valid()*/) {
     DWIN_ICON_Show(0, 0, 1, 21, 100, 0x00);
     // show print done confirm
     DWINUI::Draw_IconWB( ICON_Confirm_E, 86, 300);
@@ -1296,7 +1296,7 @@ void HMI_WaitForUser() {
 void HMI_Init() {
 //  HMI_SDCardInit();
   DWINUI::Draw_Box(1, Color_Black, {5, 220, DWIN_WIDTH-5, DWINUI::fontHeight()});
-  DWINUI::Draw_CenteredString(Color_White, 220, F("Professional Firmware "));
+  DWINUI::Draw_CenteredString(Color_White, 220, F(" Lightspeed+ Firmware "));;;;;
   for (uint16_t t = 0; t <= 100; t += 2) {
     DWINUI::Draw_Icon(ICON_Bar, 15, 260);
     DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 15 + t * 242 / 100, 260, 257, 280);
@@ -1733,8 +1733,11 @@ void DWIN_SetDataDefaults() {
   TERN_(HAS_HEATED_BED,         HMI_data.BedLevT    = PREHEAT_1_TEMP_BED);
   TERN_(ProUI,                  ProEx.SetDefaults());
   #if ENABLED(BAUD_RATE_GCODE)
-    HMI_data.Baud115K = false;
-    SetBaud250K();
+    HMI_data.Baud115K = true;
+    SetBaud115K();
+  #endif
+  #if ENABLED(LASER_FEATURE)
+    gcode.LaserMode=false;
   #endif
 }
 
@@ -2129,6 +2132,20 @@ void SetPID(celsius_t t, heater_id_t h) {
     HMI_data.Baud115K = !HMI_data.Baud115K;
     if (HMI_data.Baud115K) SetBaud115K(); else SetBaud250K();
     Draw_Chkb_Line(CurrentMenu->line(), HMI_data.Baud115K);
+    DWIN_UpdateLCD();
+  }
+#endif
+
+#if ENABLED(LASER_FEATURE)
+    void SetLaserMode() {
+    gcode.LaserMode=!gcode.LaserMode;
+    if (gcode.LaserMode) {
+      queue.inject(F("M107"));
+      thermalManager.cooldown(); 
+      queue.inject(F("M3 S1"));
+    }
+    else queue.inject(F("M5"));
+    Draw_Chkb_Line(CurrentMenu->line(), gcode.LaserMode);
     DWIN_UpdateLCD();
   }
 #endif
@@ -2627,6 +2644,10 @@ void onDrawLanguage(MenuItemClass* menuitem, int8_t line) {
   void onDrawBaudrate(MenuItemClass* menuitem, int8_t line) { onDrawChkbMenu(menuitem, line, HMI_data.Baud115K); }
 #endif
 
+#if ENABLED(LASER_FEATURE)
+   void onDrawLaserMode(MenuItemClass* menuitem, int8_t line) { onDrawChkbMenu(menuitem, line, gcode.LaserMode); }
+#endif
+
 #if ENABLED(SOUND_MENU_ITEM)
   void onDrawEnableSound(MenuItemClass* menuitem, int8_t line) { onDrawChkbMenu(menuitem, line, ui.buzzer_enabled); }
 #endif
@@ -2821,6 +2842,9 @@ void Draw_AdvancedSettings_Menu() {
     #endif
     #if ENABLED(BAUD_RATE_GCODE)
       MENU_ITEM(ICON_SetBaudRate, F("115K bauds"), onDrawBaudrate, SetBaudRate);
+    #endif
+    #if ENABLED(LASER_FEATURE)
+      MENU_ITEM(ICON_Laser, F("Laser Mode"), onDrawLaserMode, SetLaserMode);
     #endif
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, GET_TEXT_F(MSG_BRIGHTNESS), onDrawPInt8Menu, SetBrightness, &ui.brightness);
