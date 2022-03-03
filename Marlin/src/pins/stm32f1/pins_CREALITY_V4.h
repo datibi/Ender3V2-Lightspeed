@@ -143,9 +143,14 @@
   #define HEATER_BED_PIN                    PA2   // HOT BED
 #endif
 #ifndef FAN_PIN
-  #define FAN_PIN                           PA0   // FAN
+  #define FAN_PIN                           PA0   // FAN/laser
 #endif
 #define FAN_SOFT_PWM_REQUIRED
+
+#if ENABLED(LASER_FEATURE)
+#define SPINDLE_LASER_ENA_PIN                PA0   //laser/fan
+#define SPINDLE_LASER_PWM_PIN                PA0   //laser/fan
+#endif
 
 //
 // SD Card

@@ -221,6 +221,9 @@ bool CardReader::is_visible_entity(const dir_t &p OPTARG(CUSTOM_FIRMWARE_UPLOAD,
     || fileIsBinary()                                   // BIN files are accepted
     || (!onlyBin && p.name[8] == 'G'
                  && p.name[9] != '~')                   // Non-backup *.G* files are accepted
+    || flag.filenameIsBin                               // BIN files are accepted
+    || (!onlyBin && p.name[8] == 'N'
+                 && p.name[9] != '~')                   // Non-backup *.N* files are accepted
   );
 }
 

@@ -1,40 +1,44 @@
-# Professional Firmware for the Creality Ender 3 V2/S1 Printers
+# Lightspeed+ Firmware for the Creality Ender 3 V2 Printers
 
-![GitHub contributors](https://img.shields.io/github/contributors/mriscoc/Ender3V2S1.svg)
-![GitHub Release Date](https://img.shields.io/github/release-date/mriscoc/Ender3V2S1.svg)
-[![Build Status](https://github.com/mriscoc/Ender3V2S1/workflows/CI/badge.svg?branch=Ender3V2S1-Released)](https://github.com/mriscoc/Ender3V2S1/actions)
 
-## Universal RET6/RCT6 Ender 3 V2/S1 Edition
 
-Please test this firmware and let us know if it misbehaves in any way.
-Volunteers are standing by!  
-Precompiled binary files can be downloader from:
-[Latest Release](https://github.com/mriscoc/Ender3V2S1/releases/latest)
+## Ender 3 V2 Edition
 
-<img aling=left height=240 src="buildroot/share/pixmaps/Ender-3V2.jpg" /> <img height=300 src="buildroot/share/pixmaps/Ender-3S1.jpg" />
+Forked from Marlin->Miguel Risco-Castillo professional firmware
+<BR/>
+This fork has:
+- Built so far for 4.2.2
+- All G-codes required by LaserGRBL in Marlin mode for basic functionality. 
+- Engrave LaserGRBL file from SD card (added &lowast;.N&lowast; extension)
+- Laser mode option in advanced settings (not sure about it's usefullness), it will activate laser at 1% power.
+- M3 S<power>: turns on "laser mode": 60Hz PWM, heaters&fan disabled
+- M5: restores normal operation mode, 7Hz PWM
+- Removed gcode preview functionality to save on memory.
+- Activated autotemp, but it's behaviour is not great, nonprinting moves are not filtered out (Marlin issue).
 <BR/>
 
-## Wiki
- - [How to install the firmware](https://github.com/mriscoc/Ender3V2S1/wiki/How-to-install-the-firmware)
- - [Installing a 3D/BLTouch](https://github.com/mriscoc/Ender3V2S1/wiki/3D-BLTouch)
- - [Color themes](https://github.com/mriscoc/Ender3V2S1/wiki/Color-Themes)
- - [How to use with Octoprint](https://github.com/mriscoc/Ender3V2S1/wiki/Octoprint)
-  
-## Community links
-* [Telegram](https://t.me/ender3v2s1firmware)
-* [Reddit](https://www.reddit.com/r/Ender3v2Firmware) 
-* [Ender 3V2 Facebook](https://www.facebook.com/groups/ender3v2firmware)
-* [Ender 3S1 Facebook](https://www.facebook.com/groups/ender3s1printer)
+Please test this firmware and let me know if it misbehaves in any way.
+<BR/>
+Please don't forget to disconnect laser before printing :)
+<BR/>
 
-![](https://raw.githubusercontent.com/mriscoc/Ender3V2S1/Ender3V2S1-Released/screenshots/main.jpg)
+Precompiled binary files coming later....
 
-## Credits
+<BR/>
+Compiling is easy:
+<BR/>
+- Download the zip file with the sourcecode and extract to "Documents"
+<BR/>
+- Install Visual Studio Code, it's free
+<BR/>
+- Within Visual Studio Code in the extension manager search for "Auto build Marlin" and hit install. Leave VSC open, don't do anything for about 15-20 minutes, let the installation finish. When the bottom bar does not show any activity you can go further. It should install automatically PIO too, it may ask you to install it.
+<BR/>
+- "Open folder" with the whole project
+<BR/>
+- Open ABM and the top button "STM32F103RE_creality(512K)" probably is your choice but you should check the controller on your mainboard
+<BR/>
+<BR/>
 
-This is a Marlin based firmware and is maintained by [@mriscoc](https://github.com/mriscoc)  
-
-This work would not be possible without the supporters, helpers and betatesters at the **Telegram** group.
-
-Marlin firmware is an Open Source project hosted on Github, [Marlin](https://marlinfw.org/) is owned and maintained by the maker community.  
 
 ## Disclaimer  
 

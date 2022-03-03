@@ -33,7 +33,7 @@
 
 #if ProUIex
   #include "proui.h"
-  #define HAS_GCODE_PREVIEW 1
+  #define HAS_GCODE_PREVIEW 0
 #endif
 
 #define HAS_ESDIAG 1
@@ -77,6 +77,27 @@
 #define Def_Coordinate_Color  Color_White
 #define Def_Button_Color      RGB( 0, 23, 16)
 
+#define HAS_ESDIAG 1
+#ifndef INDIVIDUAL_AXIS_HOMING_SUBMENU
+  #define INDIVIDUAL_AXIS_HOMING_SUBMENU
+#endif
+#ifndef LCD_SET_PROGRESS_MANUALLY
+  #define LCD_SET_PROGRESS_MANUALLY
+#endif
+#ifndef STATUS_MESSAGE_SCROLLING
+  #define STATUS_MESSAGE_SCROLLING
+#endif
+#ifndef BAUD_RATE_GCODE
+  #define BAUD_RATE_GCODE
+#endif
+#ifndef HAS_LCD_BRIGHTNESS
+  #define HAS_LCD_BRIGHTNESS 1
+#endif
+#define LCD_BRIGHTNESS_DEFAULT 127
+#ifndef SOUND_MENU_ITEM
+  #define SOUND_MENU_ITEM
+#endif
+
 typedef struct {
   // Color settings
   uint16_t Background_Color = Def_Background_Color;
@@ -111,7 +132,7 @@ typedef struct {
     int16_t ExtMinT = EXTRUDE_MINTEMP;
   #endif
   int16_t BedLevT = TERN0(PREHEAT_1_TEMP_BED, PREHEAT_1_TEMP_BED);
-  TERN_(BAUD_RATE_GCODE, bool Baud115K = false);
+  TERN_(BAUD_RATE_GCODE, bool Baud115K = true);
   bool FullManualTramming = false;
   #ifdef MESH_BED_LEVELING
     float ManualZOffset = 0;

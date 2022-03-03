@@ -138,6 +138,9 @@ void RebootPrinter();
   void ResetEeprom();
 #endif
 
+#if ENABLED(LASER_FEATURE)
+  void SetLaserMode();
+#endif
 
 void HMI_WaitForUser();
 void HMI_SaveProcessID(const uint8_t id);
@@ -233,6 +236,7 @@ void Draw_Motion_Menu();
   void Draw_Preheat3_Menu();
   void Draw_HotendPID_Menu();
 #endif
+void DoCoolDown();
 void Draw_Temperature_Menu();
 void Draw_MaxSpeed_Menu();
 void Draw_MaxAccel_Menu();

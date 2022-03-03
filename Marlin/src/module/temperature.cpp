@@ -3080,12 +3080,47 @@ void Temperature::isr() {
         WRITE(CONTROLLER_FAN_PIN, soft_pwm_controller.add(pwm_mask, soft_pwm_controller_speed));
       #endif
 
+
+         /* soft_pwm_count_fan[N]+= SOFT_PWM_SCALE;                   
+          soft_pwm_count_fan[N]&= 127 ;                              */
+
+
+    }
+    else {
+      #define _PWM_LOW(N,S) do{ if (S.count <= pwm_count_tmp) WRITE_HEATER_##N(LOW); }while(0)
+      #if HAS_HOTEND
+        #define _PWM_LOW_E(N) _PWM_LOW(N, soft_pwm_hotend[N]);
+        REPEAT(HOTENDS, _PWM_LOW_E);
+      #endif
+
+      #if HAS_HEATED_BED
+        _PWM_LOW(BED, soft_pwm_bed);
+      #endif
+
+      #if HAS_HEATED_CHAMBER
+        _PWM_LOW(CHAMBER, soft_pwm_chamber);
+      #endif
+
+      #if HAS_COOLER
+        _PWM_LOW(COOLER, soft_pwm_cooler);
+      #endif
+
+    }
+
+    // SOFT_PWM_SCALE to frequency:
+    //
+    // 0: 16000000/64/256/128 =   7.6294 Hz
+    // 1:                / 64 =  15.2588 Hz
+    // 2:                / 32 =  30.5176 Hz
+    // 3:                / 16 =  61.0352 Hz
+    // 4:                /  8 = 122.0703 Hz
+    // 5:                /  4 = 244.1406 Hz
       #if ENABLED(FAN_SOFT_PWM)
-        #define _FAN_PWM(N) do{                                     \
-          uint8_t &spcf = soft_pwm_count_fan[N];                    \
-          spcf = (spcf & pwm_mask) + (soft_pwm_amount_fan[N] >> 1); \
-          WRITE_FAN(N, spcf > pwm_mask ? HIGH : LOW);               \
-        }while(0)
+        #define _FAN_PWM(N) {\
+           if (soft_pwm_amount_fan[N]>0) pinMode(N, OUTPUT);   \
+           WRITE_FAN(N, (pwm_count_tmp << 1 )< soft_pwm_amount_fan[N]? HIGH: LOW );\
+           }            
+        
         #if HAS_FAN0
           _FAN_PWM(0);
         #endif
@@ -3111,65 +3146,7 @@ void Temperature::isr() {
           _FAN_PWM(7);
         #endif
       #endif
-    }
-    else {
-      #define _PWM_LOW(N,S) do{ if (S.count <= pwm_count_tmp) WRITE_HEATER_##N(LOW); }while(0)
-      #if HAS_HOTEND
-        #define _PWM_LOW_E(N) _PWM_LOW(N, soft_pwm_hotend[N]);
-        REPEAT(HOTENDS, _PWM_LOW_E);
-      #endif
 
-      #if HAS_HEATED_BED
-        _PWM_LOW(BED, soft_pwm_bed);
-      #endif
-
-      #if HAS_HEATED_CHAMBER
-        _PWM_LOW(CHAMBER, soft_pwm_chamber);
-      #endif
-
-      #if HAS_COOLER
-        _PWM_LOW(COOLER, soft_pwm_cooler);
-      #endif
-
-      #if ENABLED(FAN_SOFT_PWM)
-        #if HAS_FAN0
-          if (soft_pwm_count_fan[0] <= pwm_count_tmp) WRITE_FAN(0, LOW);
-        #endif
-        #if HAS_FAN1
-          if (soft_pwm_count_fan[1] <= pwm_count_tmp) WRITE_FAN(1, LOW);
-        #endif
-        #if HAS_FAN2
-          if (soft_pwm_count_fan[2] <= pwm_count_tmp) WRITE_FAN(2, LOW);
-        #endif
-        #if HAS_FAN3
-          if (soft_pwm_count_fan[3] <= pwm_count_tmp) WRITE_FAN(3, LOW);
-        #endif
-        #if HAS_FAN4
-          if (soft_pwm_count_fan[4] <= pwm_count_tmp) WRITE_FAN(4, LOW);
-        #endif
-        #if HAS_FAN5
-          if (soft_pwm_count_fan[5] <= pwm_count_tmp) WRITE_FAN(5, LOW);
-        #endif
-        #if HAS_FAN6
-          if (soft_pwm_count_fan[6] <= pwm_count_tmp) WRITE_FAN(6, LOW);
-        #endif
-        #if HAS_FAN7
-          if (soft_pwm_count_fan[7] <= pwm_count_tmp) WRITE_FAN(7, LOW);
-        #endif
-        #if ENABLED(USE_CONTROLLER_FAN)
-          if (soft_pwm_controller.count <= pwm_count_tmp) WRITE(CONTROLLER_FAN_PIN, LOW);
-        #endif
-      #endif
-    }
-
-    // SOFT_PWM_SCALE to frequency:
-    //
-    // 0: 16000000/64/256/128 =   7.6294 Hz
-    // 1:                / 64 =  15.2588 Hz
-    // 2:                / 32 =  30.5176 Hz
-    // 3:                / 16 =  61.0352 Hz
-    // 4:                /  8 = 122.0703 Hz
-    // 5:                /  4 = 244.1406 Hz
     pwm_count = pwm_count_tmp + _BV(SOFT_PWM_SCALE);
 
   #else // SLOW_PWM_HEATERS

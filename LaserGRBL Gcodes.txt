@@ -1,0 +1,32 @@
+LaserGRBL G-codes:
+
+Header:
+G90 ;absolute coordinates
+M201 X5000 ; max acceleration
+M204 S4000 ; acceleration
+M205 X10 ;Jerk
+G28 X Y  ;home x y
+M428
+M206 X[right/2-left/2-100] Y[top/2-bottom/2-120] 
+M3 S2   ;laser low power on
+G1 X0 Y0 F4000 S2 ;go to zero
+M5
+M84 S1
+M0 Adjust laser!
+
+Multiple Passes:
+G91 ;(use relative coordinates)
+G0 Z-.2 ;(sinks the Z axis)
+G90 ;(use absolute coordinates)
+
+Footer:
+M5
+G91 ;(use relative coordinates)
+G0 Z0.1
+G90 ;(use absolute coordinates)
+M206 X0 Y0  ;offsets
+M84 S1
+
+
+Custom Buttons:
+Homing:
