@@ -5,7 +5,6 @@
 ## Ender 3 V2 Edition
 
 Please test this firmware and let us know if it misbehaves in any way.
-Volunteers are standing by!  
 Precompiled binary files coming later....
 
 
