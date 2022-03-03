@@ -6,7 +6,7 @@
 
 Forked from Marlin -> Miguel Risco-Castillo professional Firmware
 <BR/>
-This for has:
+This fork has:
 - Built so far for 4.2.2
 - All G-codes required by LaserGRBL for basic functionality. 
 - Engrave from SD card (added *.N* extension)
