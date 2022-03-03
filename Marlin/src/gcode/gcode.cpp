@@ -96,7 +96,9 @@ axis_bits_t GcodeSuite::axis_relative = 0 LOGICAL_AXIS_GANG(
 #if EITHER(HAS_AUTO_REPORTING, HOST_KEEPALIVE_FEATURE)
   bool GcodeSuite::autoreport_paused; // = false
 #endif
-
+#if ENABLED(LASER_FEATURE)
+  bool GcodeSuite::LaserMode;
+#endif
 #if ENABLED(HOST_KEEPALIVE_FEATURE)
   GcodeSuite::MarlinBusyState GcodeSuite::busy_state = NOT_BUSY;
   uint8_t GcodeSuite::host_keepalive_interval = DEFAULT_KEEPALIVE_INTERVAL;
@@ -222,15 +224,18 @@ void GcodeSuite::get_destination_from_command() {
     M165();
   #endif
 
+
   #if ENABLED(LASER_MOVE_POWER)
     // Set the laser power in the planner to configure this move
     if (parser.seen('S')) {
       const float spwr = parser.value_float();
+      cutter.set_inline_enabled(true);
       cutter.inline_power(TERN(SPINDLE_LASER_USE_PWM, cutter.power_to_range(cutter_power_t(round(spwr))), spwr > 0 ? 255 : 0));
     }
     else if (ENABLED(LASER_MOVE_G0_OFF) && parser.codenum == 0) // G0
       cutter.set_inline_enabled(false);
   #endif
+
 }
 
 /**
@@ -471,8 +476,8 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if HAS_CUTTER
-        case 3: M3_M4(false); break;                              // M3: Turn ON Laser | Spindle (clockwise), set Power | Speed
-        case 4: M3_M4(true ); break;                              // M4: Turn ON Laser | Spindle (counter-clockwise), set Power | Speed
+        case 3: M107();M3_M4(false); break;                              // M3: Turn ON Laser | Spindle (clockwise), set Power | Speed
+        case 4: M107();M3_M4(true ); break;                              // M4: Turn ON Laser | Spindle (counter-clockwise), set Power | Speed
         case 5: M5(); break;                                      // M5: Turn OFF Laser | Spindle
       #endif
 
@@ -569,7 +574,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       case 105: M105(); return;                                   // M105: Report Temperatures (and say "ok")
 
       #if HAS_FAN
-        case 106: M106(); break;                                  // M106: Fan On
+        case 106: if(!gcode.LaserMode) M106(); break;                                  // M106: Fan On
         case 107: M107(); break;                                  // M107: Fan Off
       #endif
 

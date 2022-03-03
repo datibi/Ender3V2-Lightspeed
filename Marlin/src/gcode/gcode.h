@@ -424,6 +424,9 @@ public:
   static void home_all_axes(const bool keep_leveling=false) {
     process_subcommands_now(keep_leveling ? FPSTR(G28_STR) : TERN(CAN_SET_LEVELING_AFTER_G28, F("G28L0"), FPSTR(G28_STR)));
   }
+  #if ENABLED(LASER_FEATURE)
+  static bool LaserMode;
+  #endif
 
   #if EITHER(HAS_AUTO_REPORTING, HOST_KEEPALIVE_FEATURE)
     static bool autoreport_paused;

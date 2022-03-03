@@ -38,6 +38,8 @@
   #include "../feature/ammeter.h"
 #endif
 
+#include "../gcode/gcode.h"
+
 SpindleLaser cutter;
 uint8_t SpindleLaser::power;
 #if ENABLED(LASER_FEATURE)
@@ -59,18 +61,18 @@ void SpindleLaser::init() {
   #if ENABLED(SPINDLE_SERVO)
     MOVE_SERVO(SPINDLE_SERVO_NR, SPINDLE_SERVO_MIN);
   #else
-    OUT_WRITE(SPINDLE_LASER_ENA_PIN, !SPINDLE_LASER_ACTIVE_STATE);    // Init spindle to off
+    //OUT_WRITE(SPINDLE_LASER_ENA_PIN, !SPINDLE_LASER_ACTIVE_STATE);    // Init spindle to off
   #endif
   #if ENABLED(SPINDLE_CHANGE_DIR)
     OUT_WRITE(SPINDLE_DIR_PIN, SPINDLE_INVERT_DIR);                   // Init rotation to clockwise (M3)
   #endif
   #if ENABLED(SPINDLE_LASER_USE_PWM)
-    SET_PWM(SPINDLE_LASER_PWM_PIN);
-    set_pwm_duty(pin_t(SPINDLE_LASER_PWM_PIN), SPINDLE_LASER_PWM_OFF); // Set to lowest speed
+    //SET_PWM(SPINDLE_LASER_PWM_PIN);
+    //set_pwm_duty(pin_t(SPINDLE_LASER_PWM_PIN), SPINDLE_LASER_PWM_OFF); // Set to lowest speed
   #endif
   #if ENABLED(HAL_CAN_SET_PWM_FREQ) && SPINDLE_LASER_FREQUENCY
-    set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), SPINDLE_LASER_FREQUENCY);
-    TERN_(MARLIN_DEV_MODE, frequency = SPINDLE_LASER_FREQUENCY);
+    //set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), gcode.LaserMode?SPINDLE_LASER_FREQUENCY:TEMP_TIMER_FREQUENCY);
+    //TERN_(MARLIN_DEV_MODE, frequency = gcode.LaserMode?SPINDLE_LASER_FREQUENCY:TEMP_TIMER_FREQUENCY);
   #endif
   #if ENABLED(AIR_EVACUATION)
     OUT_WRITE(AIR_EVACUATION_PIN, !AIR_EVACUATION_ACTIVE);            // Init Vacuum/Blower OFF
@@ -88,20 +90,20 @@ void SpindleLaser::init() {
    * @param ocr Power value
    */
   void SpindleLaser::_set_ocr(const uint8_t ocr) {
-    #if ENABLED(HAL_CAN_SET_PWM_FREQ) && SPINDLE_LASER_FREQUENCY
-      set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MARLIN_DEV_MODE, frequency, SPINDLE_LASER_FREQUENCY));
+    #if SPINDLE_LASER_FREQUENCY
+      set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MARLIN_DEV_MODE, frequency, gcode.LaserMode?SPINDLE_LASER_FREQUENCY:TEMP_TIMER_FREQUENCY));
     #endif
-    set_pwm_duty(pin_t(SPINDLE_LASER_PWM_PIN), ocr ^ SPINDLE_LASER_PWM_OFF);
+    set_pwm_duty(pin_t(SPINDLE_LASER_PWM_PIN), gcode.LaserMode? ocr ^ SPINDLE_LASER_PWM_OFF:0 ^ SPINDLE_LASER_PWM_OFF);
   }
 
   void SpindleLaser::set_ocr(const uint8_t ocr) {
-    WRITE(SPINDLE_LASER_ENA_PIN,  SPINDLE_LASER_ACTIVE_STATE); // Cutter ON
-    _set_ocr(ocr);
+    //WRITE(SPINDLE_LASER_ENA_PIN,  SPINDLE_LASER_ACTIVE_STATE); // Cutter ON
+  _set_ocr(ocr);
   }
 
   void SpindleLaser::ocr_off() {
-    WRITE(SPINDLE_LASER_ENA_PIN, !SPINDLE_LASER_ACTIVE_STATE); // Cutter OFF
-    _set_ocr(0);
+  gcode.LaserMode=false;
+  _set_ocr(0);
   }
 #endif // SPINDLE_LASER_USE_PWM
 
@@ -133,7 +135,7 @@ void SpindleLaser::apply_power(const uint8_t opwr) {
   #elif ENABLED(SPINDLE_SERVO)
     MOVE_SERVO(SPINDLE_SERVO_NR, power);
   #else
-    WRITE(SPINDLE_LASER_ENA_PIN, enabled() ? SPINDLE_LASER_ACTIVE_STATE : !SPINDLE_LASER_ACTIVE_STATE);
+    //WRITE(SPINDLE_LASER_ENA_PIN, enabled() ? SPINDLE_LASER_ACTIVE_STATE : !SPINDLE_LASER_ACTIVE_STATE);
     isReady = true;
   #endif
 }

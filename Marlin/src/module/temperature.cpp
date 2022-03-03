@@ -3121,37 +3121,11 @@ void Temperature::isr() {
         WRITE(CONTROLLER_FAN_PIN, soft_pwm_controller.add(pwm_mask, soft_pwm_controller_speed));
       #endif
 
-      #if ENABLED(FAN_SOFT_PWM)
-        #define _FAN_PWM(N) do{                                     \
-          uint8_t &spcf = soft_pwm_count_fan[N];                    \
-          spcf = (spcf & pwm_mask) + (soft_pwm_amount_fan[N] >> 1); \
-          WRITE_FAN(N, spcf > pwm_mask ? HIGH : LOW);               \
-        }while(0)
-        #if HAS_FAN0
-          _FAN_PWM(0);
-        #endif
-        #if HAS_FAN1
-          _FAN_PWM(1);
-        #endif
-        #if HAS_FAN2
-          _FAN_PWM(2);
-        #endif
-        #if HAS_FAN3
-          _FAN_PWM(3);
-        #endif
-        #if HAS_FAN4
-          _FAN_PWM(4);
-        #endif
-        #if HAS_FAN5
-          _FAN_PWM(5);
-        #endif
-        #if HAS_FAN6
-          _FAN_PWM(6);
-        #endif
-        #if HAS_FAN7
-          _FAN_PWM(7);
-        #endif
-      #endif
+
+         /* soft_pwm_count_fan[N]+= SOFT_PWM_SCALE;                   
+          soft_pwm_count_fan[N]&= 127 ;                              */
+
+
     }
     else {
       #define _PWM_LOW(N,S) do{ if (S.count <= pwm_count_tmp) WRITE_HEATER_##N(LOW); }while(0)
@@ -3172,7 +3146,7 @@ void Temperature::isr() {
         _PWM_LOW(COOLER, soft_pwm_cooler);
       #endif
 
-      #if ENABLED(FAN_SOFT_PWM)
+      #if ENABLED(FAN_SOFT_PWM2121)
         #if HAS_FAN0
           if (soft_pwm_count_fan[0] <= pwm_count_tmp) WRITE_FAN(0, LOW);
         #endif
@@ -3211,6 +3185,38 @@ void Temperature::isr() {
     // 3:                / 16 =  61.0352 Hz
     // 4:                /  8 = 122.0703 Hz
     // 5:                /  4 = 244.1406 Hz
+      #if ENABLED(FAN_SOFT_PWM)
+        #define _FAN_PWM(N) {\
+           if (soft_pwm_amount_fan[N]>0) pinMode(N, OUTPUT);   \
+           WRITE_FAN(N, (pwm_count_tmp << 1 )< soft_pwm_amount_fan[N]? HIGH: LOW );\
+           }            
+        
+        #if HAS_FAN0
+          _FAN_PWM(0);
+        #endif
+        #if HAS_FAN1
+          _FAN_PWM(1);
+        #endif
+        #if HAS_FAN2
+          _FAN_PWM(2);
+        #endif
+        #if HAS_FAN3
+          _FAN_PWM(3);
+        #endif
+        #if HAS_FAN4
+          _FAN_PWM(4);
+        #endif
+        #if HAS_FAN5
+          _FAN_PWM(5);
+        #endif
+        #if HAS_FAN6
+          _FAN_PWM(6);
+        #endif
+        #if HAS_FAN7
+          _FAN_PWM(7);
+        #endif
+      #endif
+
     pwm_count = pwm_count_tmp + _BV(SOFT_PWM_SCALE);
 
   #else // SLOW_PWM_HEATERS

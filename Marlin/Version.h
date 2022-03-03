@@ -28,13 +28,13 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.0.9.4 MRiscoC"
+#define SHORT_BUILD_VERSION "2.0.9.4 Tibor D"
 
 /**
  * Verbose version identifier which should contain a reference to the location
  * from where the binary was downloaded or the source code was compiled.
  */
-#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " 422 ManualMesh, based on bugfix-2.0.x"
+#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " 422 CRTouch, based on bugfix-2.0.x"
 
 /**
  * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
@@ -57,7 +57,7 @@
  * has a distinct Github fork— the Source Code URL should just be the main
  * Marlin repository.
  */
-#define SOURCE_CODE_URL "github.com/mriscoc/Ender3V2S1"
+#define SOURCE_CODE_URL "github.com/datibi/Ender3V2-Lightspeed"
 
 /**
  * Default generic printer UUID.
@@ -68,7 +68,7 @@
  * The WEBSITE_URL is the location where users can get more information such as
  * documentation about a specific Marlin release.
  */
-#define WEBSITE_URL "github.com/mriscoc/Ender3V2S1/wiki"
+#define WEBSITE_URL "github.com/datibi/Ender3V2-Lightspeed"
 
 /**
  * Set the vendor info the serial USB interface, if changable
