@@ -34,7 +34,7 @@ Compiling is easy:
 <BR/>
 - "Open folder" with the whole project
 <BR/>
-- Open ABM and the top button "STM32F103RE_creality(512K) probably is your choice but you should check the controller on your mainboard"
+- Open ABM and the top button "STM32F103RE_creality(512K)" probably is your choice but you should check the controller on your mainboard
 <BR/>
 <BR/>
 
