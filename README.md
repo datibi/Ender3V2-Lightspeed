@@ -25,11 +25,17 @@ Precompiled binary files coming later....
 
 <BR/>
 Compiling is easy:
+<BR/>
 - Download the zip file with the sourcecode and extract to "Documents"
+<BR/>
 - Install Visual Studio Code, it's free
+<BR/>
 - Within Visual Studio Code in the extension manager serach for "Auto build Marlin" and hit install. Leave VSC open, don't do anything for about 15-20 minutes, let the installation finish. When the bottom bar does not show any activity you can go further.
+<BR/>
 - "Open folder" with the whole project
+<BR/>
 - Open ABM and the top button "STM32F103RE_creality(512K) probably is your choice but you should check the controller on your mainboard"
+<BR/>
 <BR/>
 
 
