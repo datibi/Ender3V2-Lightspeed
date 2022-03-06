@@ -1759,7 +1759,7 @@ void DWIN_LoadSettings(const char *buff) {
   #endif
     #if ENABLED(LASER_FEATURE)
     gcode.LaserMode=false;
-    SetLaserMode()
+    SetLaserMode();
   #endif
   TERN_(ProUI, ProEx.LoadSettings());
 }
