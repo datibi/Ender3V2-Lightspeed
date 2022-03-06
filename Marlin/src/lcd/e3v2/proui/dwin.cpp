@@ -1757,6 +1757,10 @@ void DWIN_LoadSettings(const char *buff) {
   #if ENABLED(BAUD_RATE_GCODE)
     if (HMI_data.Baud115K) SetBaud115K(); else SetBaud250K();
   #endif
+    #if ENABLED(LASER_FEATURE)
+    gcode.LaserMode=false;
+    SetLaserMode()
+  #endif
   TERN_(ProUI, ProEx.LoadSettings());
 }
 
@@ -2138,13 +2142,17 @@ void SetPID(celsius_t t, heater_id_t h) {
 
 #if ENABLED(LASER_FEATURE)
     void SetLaserMode() {
-    gcode.LaserMode=!gcode.LaserMode;
     if (gcode.LaserMode) {
       queue.inject(F("M107"));
       thermalManager.cooldown(); 
       queue.inject(F("M3 S1"));
     }
     else queue.inject(F("M5"));
+  }
+
+  void SetLaserModeItem() {
+    gcode.LaserMode=!gcode.LaserMode;
+    SetLaserMode();
     Draw_Chkb_Line(CurrentMenu->line(), gcode.LaserMode);
     DWIN_UpdateLCD();
   }
@@ -2844,7 +2852,7 @@ void Draw_AdvancedSettings_Menu() {
       MENU_ITEM(ICON_SetBaudRate, F("115K bauds"), onDrawBaudrate, SetBaudRate);
     #endif
     #if ENABLED(LASER_FEATURE)
-      MENU_ITEM(ICON_Laser, F("Laser Mode"), onDrawLaserMode, SetLaserMode);
+      MENU_ITEM(ICON_Laser, F("Laser Mode"), onDrawLaserMode, SetLaserModeItem);
     #endif
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, GET_TEXT_F(MSG_BRIGHTNESS), onDrawPInt8Menu, SetBrightness, &ui.brightness);

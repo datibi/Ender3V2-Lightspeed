@@ -38,6 +38,8 @@
   #include "../feature/ammeter.h"
 #endif
 
+#include "../gcode/gcode.h"
+
 SpindleLaser cutter;
 uint8_t SpindleLaser::power;
 #if ENABLED(LASER_FEATURE)
@@ -94,7 +96,7 @@ void SpindleLaser::init() {
   return;
   }*/  
     #if ENABLED(HAL_CAN_SET_PWM_FREQ) && SPINDLE_LASER_FREQUENCY
-      set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MARLIN_DEV_MODE, frequency, SPINDLE_LASER_FREQUENCY));
+      set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MARLIN_DEV_MODE, frequency, gcode.LaserMode?SPINDLE_LASER_FREQUENCY:TEMP_TIMER_FREQUENCY));
     #endif
     set_pwm_duty(pin_t(SPINDLE_LASER_PWM_PIN), ocr ^ SPINDLE_LASER_PWM_OFF);
   }
@@ -107,7 +109,9 @@ void SpindleLaser::init() {
   void SpindleLaser::ocr_off() {
     WRITE(SPINDLE_LASER_ENA_PIN, !SPINDLE_LASER_ACTIVE_STATE); // Cutter OFF
     _set_ocr(0);
-    set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MARLIN_DEV_MODE, frequency, TEMP_TIMER_FREQUENCY));
+    #if ENABLED(HAL_CAN_SET_PWM_FREQ) && SPINDLE_LASER_FREQUENCY
+    set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MARLIN_DEV_MODE, frequency, gcode.LaserMode?SPINDLE_LASER_FREQUENCY:TEMP_TIMER_FREQUENCY));
+    #endif
   }
 #endif // SPINDLE_LASER_USE_PWM
 

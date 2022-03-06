@@ -523,12 +523,12 @@
 //#define MAX31865_SENSOR_OHMS_1      100
 //#define MAX31865_CALIBRATION_OHMS_1 430
 
-#define TEMP_RESIDENCY_TIME         10  // (seconds) Time to wait for hotend to "settle" in M109
-#define TEMP_WINDOW                  1  // (°C) Temperature proximity for the "temperature reached" timer
+#define TEMP_RESIDENCY_TIME          6  // (seconds) Time to wait for hotend to "settle" in M109
+#define TEMP_WINDOW                  2  // (°C) Temperature proximity for the "temperature reached" timer
 #define TEMP_HYSTERESIS              3  // (°C) Temperature proximity considered "close enough" to the target
 
-#define TEMP_BED_RESIDENCY_TIME     10  // (seconds) Time to wait for bed to "settle" in M190
-#define TEMP_BED_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
+#define TEMP_BED_RESIDENCY_TIME      6  // (seconds) Time to wait for bed to "settle" in M190
+#define TEMP_BED_WINDOW              2  // (°C) Temperature proximity for the "temperature reached" timer
 #define TEMP_BED_HYSTERESIS          3  // (°C) Temperature proximity considered "close enough" to the target
 
 #define TEMP_CHAMBER_RESIDENCY_TIME 10  // (seconds) Time to wait for chamber to "settle" in M191
@@ -597,7 +597,7 @@
 #define PIDTEMP
 #define BANG_MAX 255     // Limits current to nozzle while in bang-bang mode; 255=full current
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
-#define PID_K1 0.95      // Smoothing factor within any PID loop
+#define PID_K1 0.50      // D Tibor Custom Ender3v2 Less smoothing factor within any PID loop for tighter PID control
 
 #if ENABLED(PIDTEMP)
   //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
@@ -612,9 +612,9 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
-    #define DEFAULT_Kp  20.89  // MRiscoC Stock Ender3v2 PID
-    #define DEFAULT_Ki   2.10  // MRiscoC Stock Ender3v2 PID
-    #define DEFAULT_Kd  50.18  // MRiscoC Stock Ender3v2 PID
+    #define DEFAULT_Kp  30.01  // D Tibor Custom Ender3v2 PID - this is my custom hotend, probably it will not work with any other, default creality PID parameters are not applicable
+    #define DEFAULT_Ki   2.81  // D Tibor Custom Ender3v2 PID
+    #define DEFAULT_Kd 150.01  // D Tibor Custom Ender3v2 PID
   #endif
 #endif // PIDTEMP
 
@@ -653,9 +653,9 @@
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define DEFAULT_bedKp 12.10  // MRiscoC Stock Ender3v2 PID
-  #define DEFAULT_bedKi  2.47  // MRiscoC Stock Ender3v2 PID
-  #define DEFAULT_bedKd 64.59  // MRiscoC Stock Ender3v2 PID
+  #define DEFAULT_bedKp 200.00  // D Tibor Custom Ender3v2 PID - almost bang-bang operation, reaching target temperature is quicker, stable current during printing
+  #define DEFAULT_bedKi   0.50  // D Tibor Custom Ender3v2 PID
+  #define DEFAULT_bedKd   0.50  // D Tibor Custom Ender3v2 PID
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
@@ -2075,7 +2075,7 @@
   //#define PASSWORD_ON_SD_PRINT_MENU       // This does not prevent gcodes from running
   //#define PASSWORD_AFTER_SD_PRINT_END
   //#define PASSWORD_AFTER_SD_PRINT_ABORT
-  //#include "Configuration_Secure.h"       // External file with PASSWORD_DEFAULT_VALUE
+  //include "Configuration_Secure.h"       // External file with PASSWORD_DEFAULT_VALUE
 #endif
 
 //=============================================================================
