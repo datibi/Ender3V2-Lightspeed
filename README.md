@@ -30,7 +30,7 @@ Compiling is easy:
 <BR/>
 - Install Visual Studio Code, it's free
 <BR/>
-- Within Visual Studio Code in the extension manager serach for "Auto build Marlin" and hit install. Leave VSC open, don't do anything for about 15-20 minutes, let the installation finish. When the bottom bar does not show any activity you can go further.
+- Within Visual Studio Code in the extension manager serach for "Auto build Marlin" and hit install. Leave VSC open, don't do anything for about 15-20 minutes, let the installation finish. When the bottom bar does not show any activity you can go further. It should install automatically PIO too, it may ask you to install it.
 <BR/>
 - "Open folder" with the whole project
 <BR/>
