@@ -1754,14 +1754,15 @@ void DWIN_LoadSettings(const char *buff) {
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color);
   TERN_(PREVENT_COLD_EXTRUSION, ApplyExtMinT());
   feedrate_percentage = 100;
-  #if ENABLED(BAUD_RATE_GCODE)
-    if (HMI_data.Baud115K) SetBaud115K(); else SetBaud250K();
-  #endif
-    #if ENABLED(LASER_FEATURE)
+  #if ENABLED(LASER_FEATURE)
     gcode.LaserMode=false;
     SetLaserMode();
   #endif
   TERN_(ProUI, ProEx.LoadSettings());
+  #if ENABLED(BAUD_RATE_GCODE)
+    if (HMI_data.Baud115K) SetBaud115K(); else SetBaud250K();
+  #endif
+
 }
 
 // Initialize or re-initialize the LCD
@@ -2060,10 +2061,10 @@ void SetHome() {
   }
 #endif
 
-#if HAS_PREHEAT
-  void DoPreheat0() { ui.preheat_all(0); }
-  void DoPreheat1() { ui.preheat_all(1); }
-  void DoPreheat2() { ui.preheat_all(2); }
+#if HAS_PREHEAT  
+  void DoPreheat0() { gcode.LaserMode=false; SetLaserMode(); ui.preheat_all(0); }
+  void DoPreheat1() { gcode.LaserMode=false; SetLaserMode(); ui.preheat_all(1); }
+  void DoPreheat2() { gcode.LaserMode=false; SetLaserMode(); ui.preheat_all(2); }
 #endif
 
 void DoCoolDown() { thermalManager.cooldown(); }
@@ -2143,8 +2144,8 @@ void SetPID(celsius_t t, heater_id_t h) {
 #if ENABLED(LASER_FEATURE)
     void SetLaserMode() {
     if (gcode.LaserMode) {
-      queue.inject(F("M107"));
       thermalManager.cooldown(); 
+      queue.inject(F("M107"));
       queue.inject(F("M3 S1"));
     }
     else queue.inject(F("M5"));

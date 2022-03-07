@@ -3445,7 +3445,7 @@
   #define SPINDLE_LASER_USE_PWM                // Enable if your controller supports setting the speed/power
   #if ENABLED(SPINDLE_LASER_USE_PWM)
     #define SPINDLE_LASER_PWM_INVERT    false  // Set to "true" if the speed/power goes up when you want it to go slower
-    #define SPINDLE_LASER_FREQUENCY     50     // (Hz) Spindle/laser frequency (only on supported HALs: AVR and LPC) Ender 3v2/creality laser, need to keep frequency below 100Hz, at 1KHz the DC-DC coverter gets damaged
+    #define SPINDLE_LASER_FREQUENCY     60     // (Hz) Spindle/laser frequency (only on supported HALs: AVR and LPC) Ender 3v2/creality laser, need to keep frequency below 100Hz, at 1KHz the DC-DC coverter gets damaged
   #endif
 
   //#define AIR_EVACUATION                     // Cutter Vacuum / Laser Blower motor control with G-codes M10-M11

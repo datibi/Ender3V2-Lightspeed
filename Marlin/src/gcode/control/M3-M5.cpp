@@ -70,7 +70,6 @@
  *  PWM duty cycle goes from 0 (off) to 255 (always on).
  */
 void GcodeSuite::M3_M4(const bool is_M4) {
- LaserMode = true;
  #if HAS_EXTRUDERS 
   thermalManager.cooldown();
   thermalManager.set_fan_speed(0, 0);
@@ -136,14 +135,14 @@ void GcodeSuite::M3_M4(const bool is_M4) {
  * M5 - Cutter OFF (when moves are complete)
  */
 void GcodeSuite::M5() {
-  LaserMode = false;
   #if ENABLED(LASER_POWER_INLINE)
-    if (parser.seen('I') == DISABLED(LASER_POWER_INLINE_INVERT)) {
-      cutter.set_inline_enabled(false); // Laser power in inline mode
-      return;
-    }
-    // Non-inline, standard case
-    cutter.inline_disable(); // Prevent future blocks re-setting the power
+  //  if (parser.seen('I') == DISABLED(LASER_POWER_INLINE_INVERT)) {
+      //cutter.inline_power(cutter.upower_to_ocr(0));
+      //cutter.set_inline_enabled(false); // Laser power in inline mode
+      //return;
+   // }
+     //Non-inline, standard case
+  cutter.inline_disable(); // Prevent future blocks re-setting the power
   #endif
   planner.synchronize();
   cutter.set_enabled(false);
