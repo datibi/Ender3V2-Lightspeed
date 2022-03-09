@@ -476,8 +476,8 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if HAS_CUTTER
-        case 3: M3_M4(false); break;                              // M3: Turn ON Laser | Spindle (clockwise), set Power | Speed
-        case 4: M3_M4(true ); break;                              // M4: Turn ON Laser | Spindle (counter-clockwise), set Power | Speed
+        case 3: M107();M3_M4(false); break;                              // M3: Turn ON Laser | Spindle (clockwise), set Power | Speed
+        case 4: M107();M3_M4(true ); break;                              // M4: Turn ON Laser | Spindle (counter-clockwise), set Power | Speed
         case 5: M5(); break;                                      // M5: Turn OFF Laser | Spindle
       #endif
 
@@ -574,7 +574,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       case 105: M105(); return;                                   // M105: Report Temperatures (and say "ok")
 
       #if HAS_FAN
-        case 106: M106(); break;                                  // M106: Fan On
+        case 106: if(!gcode.LaserMode) M106(); break;                                  // M106: Fan On
         case 107: M107(); break;                                  // M107: Fan Off
       #endif
 

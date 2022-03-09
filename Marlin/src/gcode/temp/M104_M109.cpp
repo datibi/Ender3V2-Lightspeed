@@ -75,10 +75,6 @@
  */
 void GcodeSuite::M104_M109(const bool isM109) {
 
-if (LaserMode){
-    thermalManager.cooldown();
-    return;
-}
   if (DEBUGGING(DRYRUN)) return;
 
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1

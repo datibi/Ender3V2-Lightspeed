@@ -3571,7 +3571,7 @@
         #define LASER_MOVE_G0_OFF
 
         // Turn off the laser on G28 homing.
-        #define LASER_MOVE_G28_OFF
+        //#define LASER_MOVE_G28_OFF
       #endif
 
       /**

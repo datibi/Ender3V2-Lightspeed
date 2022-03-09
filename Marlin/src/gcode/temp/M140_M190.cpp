@@ -56,10 +56,6 @@
  *  (used by printingIsActive, etc.) and turning off heaters will stop the timer.
  */
 void GcodeSuite::M140_M190(const bool isM190) {
-if (LaserMode){
-    thermalManager.cooldown();
-    return;
-}
 
   if (DEBUGGING(DRYRUN)) return;
 

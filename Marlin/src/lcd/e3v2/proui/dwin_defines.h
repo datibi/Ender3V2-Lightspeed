@@ -107,8 +107,8 @@ typedef struct {
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     int16_t ExtMinT = EXTRUDE_MINTEMP;
   #endif
-  #if ENABLED(PREHEAT_BEFORE_LEVELING) && defined(PREHEAT_1_TEMP_BED)
-    int16_t BedLevT = PREHEAT_1_TEMP_BED;
+  #if defined(PREHEAT_1_TEMP_BED)
+    int16_t BedLevT = 0;
   #endif
   TERN_(BAUD_RATE_GCODE, bool Baud115K = true);
   bool FullManualTramming = false;

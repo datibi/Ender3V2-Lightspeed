@@ -1663,7 +1663,7 @@ void DWIN_Print_Finished() {
   HMI_flag.pause_flag = false;
   wait_for_heatup = false;
   planner.finish_and_disable();
-  thermalManager.cooldown();
+  //thermalManager.cooldown();
   Goto_PrintDone();
 }
 
@@ -1730,7 +1730,7 @@ void DWIN_SetDataDefaults() {
   TERN_(HAS_HEATED_BED,         HMI_data.BedPidT    = PREHEAT_1_TEMP_BED);
   TERN_(HAS_HOTEND,             HMI_data.PidCycles  = 5);
   TERN_(PREVENT_COLD_EXTRUSION, HMI_data.ExtMinT    = EXTRUDE_MINTEMP);
-  TERN_(HAS_HEATED_BED,         HMI_data.BedLevT    = PREHEAT_1_TEMP_BED);
+  TERN_(HAS_HEATED_BED,         HMI_data.BedLevT    = LEVELING_BED_TEMP);
   TERN_(ProUI,                  ProEx.SetDefaults());
   #if ENABLED(BAUD_RATE_GCODE)
     HMI_data.Baud115K = true;
@@ -1754,15 +1754,13 @@ void DWIN_LoadSettings(const char *buff) {
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color);
   TERN_(PREVENT_COLD_EXTRUSION, ApplyExtMinT());
   feedrate_percentage = 100;
-  #if ENABLED(LASER_FEATURE)
-    gcode.LaserMode=false;
-    SetLaserMode();
-  #endif
-  TERN_(ProUI, ProEx.LoadSettings());
   #if ENABLED(BAUD_RATE_GCODE)
     if (HMI_data.Baud115K) SetBaud115K(); else SetBaud250K();
   #endif
-
+  TERN_(ProUI, ProEx.LoadSettings());
+  #if ENABLED(LASER_FEATURE)
+    gcode.LaserMode=false;
+  #endif
 }
 
 // Initialize or re-initialize the LCD
@@ -2148,7 +2146,10 @@ void SetPID(celsius_t t, heater_id_t h) {
       queue.inject(F("M107"));
       queue.inject(F("M3 S1"));
     }
-    else queue.inject(F("M5"));
+    else 
+    {
+      queue.inject(F("M5"));
+    }
   }
 
   void SetLaserModeItem() {
@@ -2850,10 +2851,10 @@ void Draw_AdvancedSettings_Menu() {
       MENU_ITEM(ICON_Pwrlossr, GET_TEXT_F(MSG_OUTAGE_RECOVERY), onDrawPwrLossR, SetPwrLossr);
     #endif
     #if ENABLED(BAUD_RATE_GCODE)
-      MENU_ITEM(ICON_SetBaudRate, F("115K bauds"), onDrawBaudrate, SetBaudRate);
+      MENU_ITEM(ICON_SetBaudRate, F("115K baudrate"), onDrawBaudrate, SetBaudRate);
     #endif
     #if ENABLED(LASER_FEATURE)
-      MENU_ITEM(ICON_Laser, F("Laser Mode"), onDrawLaserMode, SetLaserModeItem);
+      MENU_ITEM(ICON_Laser, F("LaZeR Mode 60Hz"), onDrawLaserMode, SetLaserModeItem);
     #endif
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, GET_TEXT_F(MSG_BRIGHTNESS), onDrawPInt8Menu, SetBrightness, &ui.brightness);

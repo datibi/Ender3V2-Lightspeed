@@ -1586,7 +1586,7 @@
 #define PREHEAT_BEFORE_LEVELING  // MRiscoC Heatting to compensate thermal expansions
 #if ENABLED(PREHEAT_BEFORE_LEVELING)
   #define LEVELING_NOZZLE_TEMP   0   // (°C) Only applies to E0 at this time  // MRiscoC No necessary for BLTouch
-  #define LEVELING_BED_TEMP     50
+  #define LEVELING_BED_TEMP      0
 #endif
 
 /**
