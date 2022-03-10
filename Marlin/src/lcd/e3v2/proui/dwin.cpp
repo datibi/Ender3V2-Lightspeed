@@ -2143,8 +2143,7 @@ void SetPID(celsius_t t, heater_id_t h) {
     void SetLaserMode() {
     if (gcode.LaserMode) {
       thermalManager.cooldown(); 
-      queue.inject(F("M107"));
-      queue.inject(F("M3 S1"));
+      queue.inject(F("M107\nM3 S2"));
     }
     else 
     {

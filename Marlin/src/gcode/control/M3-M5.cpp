@@ -83,8 +83,6 @@ void GcodeSuite::M3_M4(const bool is_M4) {
       return cutter.unitPower;
     };
   #endif
-
-
 LaserMode=true;
   #if ENABLED(LASER_POWER_INLINE)
     if (parser.seen('I') == DISABLED(LASER_POWER_INLINE_INVERT)) {
@@ -115,7 +113,7 @@ LaserMode=true;
       cutter.ocr_set_power(cutter.unitPower); // The OCR is a value from 0 to 255 (uint8_t)
     }
     else
-      cutter.set_power(cutter.upower_to_ocr(get_s_power())); // THIS GETS EXECUTED NRMALLY <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+      cutter.set_power(cutter.upower_to_ocr(get_s_power())); 
   #elif ENABLED(SPINDLE_SERVO)
     cutter.set_power(get_s_power());
   #else
@@ -128,32 +126,6 @@ LaserMode=true;
  * M5 - Cutter OFF (when moves are complete)
  */
 void GcodeSuite::M5() {
-  
-  if (parser.seenval('W')) {
-        const uint spwr = round(parser.value_float());
-        switch (spwr){
-          case 0:
-            planner.synchronize();
-          break;
-          case 1:
-            cutter.inline_power(cutter.upower_to_ocr(0));
-          break;
-          case 2:
-            cutter.set_inline_enabled(true); // Laser power in inline mode
-          break;
-          case 3:
-            cutter.set_inline_enabled(false); // Laser power in inline mode
-          break;
-          case 4:
-            cutter.set_power(cutter.upower_to_ocr(0));
-          break;
-          case 5:
-            cutter.inline_power(cutter.upower_to_ocr(0));
-          break;
-        }
-    return;
-    }
-  
   #if ENABLED(LASER_POWER_INLINE)
     if (parser.seen('I') == DISABLED(LASER_POWER_INLINE_INVERT)) {
       cutter.set_inline_enabled(false); // Laser power in inline mode
@@ -165,8 +137,6 @@ void GcodeSuite::M5() {
   planner.synchronize();
   cutter.set_enabled(false);
   cutter.menuPower = cutter.unitPower;
-
-        
 }
 
 #endif // HAS_CUTTER
