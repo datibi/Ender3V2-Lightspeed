@@ -428,13 +428,13 @@
  */
 #define AUTOTEMP
 #if ENABLED(AUTOTEMP)
-  #define AUTOTEMP_OLDWEIGHT    0.8  // Factor used to weight previous readings (0.0 < value < 1.0)
+  #define AUTOTEMP_OLDWEIGHT    0.9  // Factor used to weight previous readings (0.0 < value < 1.0)
   // Turn on AUTOTEMP on M104/M109 by default using proportions set here
-  #define AUTOTEMP_PROPORTIONAL
+  //#define AUTOTEMP_PROPORTIONAL
   #if ENABLED(AUTOTEMP_PROPORTIONAL)
-    #define AUTOTEMP_MIN_P     -15 // (°C) Added to the target temperature
-    #define AUTOTEMP_MAX_P      5 // (°C) Added to the target temperature
-    #define AUTOTEMP_FACTOR_P   3.8 // Apply this F parameter by default (overridden by M104/M109 F)
+    #define AUTOTEMP_MIN_P      -5 // (°C) Added to the target temperature
+    #define AUTOTEMP_MAX_P      10 // (°C) Added to the target temperature
+    #define AUTOTEMP_FACTOR_P   2 // Apply this F parameter by default (overridden by M104/M109 F)
   #endif
 #endif
 
@@ -549,7 +549,7 @@
  *
  * Define one or both of these to override the default 0-255 range.
  */
-#define FAN_MIN_PWM 40  // Ender3v2 Configs
+#define FAN_MIN_PWM 30  // Ender3v2 Configs
 //#define FAN_MAX_PWM 128
 
 /**
