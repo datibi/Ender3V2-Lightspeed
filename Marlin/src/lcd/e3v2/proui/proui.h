@@ -1,8 +1,8 @@
 /**
  * Professional Firmware UI extensions
  * Author: Miguel A. Risco-Castillo
- * Version: 1.0
- * Date: 2022/01/31
+ * Version: 1.1.0
+ * Date: 2022/03/06
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -50,7 +50,7 @@ constexpr int16_t DEF_Z_MAX_POS = Z_MAX_POS;
 #endif
 #if HAS_BED_PROBE
   constexpr int16_t DEF_PROBING_MARGIN = PROBING_MARGIN;
-  #define MIN_PROBE_MARGIN 10
+  #define MIN_PROBE_MARGIN 3
   #define MAX_PROBE_MARGIN 60
   constexpr int16_t DEF_Z_PROBE_FEEDRATE_SLOW = (Z_PROBE_FEEDRATE_FAST / 2);
 #endif
@@ -93,7 +93,7 @@ public:
 #endif
   static void UpdateAxis(const AxisEnum axis);
   static void ApplyPhySet();
-  static void SetDefaults();
+  static void SetData();
   static void LoadSettings();
 };
 

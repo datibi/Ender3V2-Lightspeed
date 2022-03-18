@@ -214,7 +214,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
             REPEAT_1(NUM_RUNOUT_SENSORS, _CASE_INSERTED)
           }
         #else
-          if (READ(FIL_RUNOUT_PIN) != TERN(ProUI, HMI_data.Runout_active_state, FIL_RUNOUT_STATE)) wait_for_user = false;
+          if (READ(FIL_RUNOUT_PIN) != TERN(ProUIex, HMI_data.Runout_active_state, FIL_RUNOUT_STATE)) wait_for_user = false;
         #endif
       #endif
       idle_no_sleep();
@@ -709,13 +709,9 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
   #endif
 
   TERN_(HAS_FILAMENT_SENSOR, runout.reset());
-
-  #if ENABLED(DWIN_LCD_PROUI)
-    DWIN_Print_Resume();
-  #else
-    TERN_(HAS_STATUS_MESSAGE, ui.reset_status());  
-  #endif
+  TERN(DWIN_LCD_PROUI, DWIN_Print_Resume(), ui.reset_status());
   TERN_(HAS_MARLINUI_MENU, ui.return_to_status());
+
 }
 
 #endif // ADVANCED_PAUSE_FEATURE

@@ -1,8 +1,8 @@
 /**
- * Enhanced DWIN implementation
- * authors: Miguel A. Risco-Castillo (MRISCOC)
- * Version: 3.14.3
- * Date: 2022/02/17
+ * DWIN Enhanced implementation for PRO UI
+ * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Version: 3.16.3
+ * Date: 2022/03/06
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,10 +20,12 @@
  */
 #pragma once
 
-#include "../../../inc/MarlinConfigPre.h"
+#include "dwin_defines.h"
 #include "dwinui.h"
 #include "../common/encoder.h"
 #include "../../../libs/BL24CXX.h"
+
+#include "../../../inc/MarlinConfig.h"
 
 #if ANY(AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_3POINT) && DISABLED(PROBE_MANUALLY)
   #define HAS_ONESTEP_LEVELING 1
@@ -37,8 +39,6 @@
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
-#include "dwin_defines.h"
-
 enum processID : uint8_t {
   // Process ID
   MainMenu,
@@ -50,26 +50,19 @@ enum processID : uint8_t {
   SetPFloat,
   SelectFile,
   PrintProcess,
-  PrintDone,
-  PwrlossRec,
-  Reboot,
-  Info,
-  ConfirmToPrint,
-
-  // Popup Windows
-  Homing,
+  Popup,
   Leveling,
-  PidProcess,
-  ESDiagProcess,
-  PrintStatsProcess,
-  PauseOrStop,
-  FilamentPurge,
-  WaitResponse,
   Locked,
-  NothingToDo,
+  Reboot,
+  PrintDone,
+  ESDiagProcess,
+  WaitResponse,
+  Homing,
+  PidProcess,
+  NothingToDo
 };
 
-enum pidresult_t : uint8_t { 
+enum pidresult_t : uint8_t {
   PID_BAD_EXTRUDER_NUM,
   PID_TEMP_TOO_HIGH,
   PID_TUNING_TIMEOUT,
@@ -98,7 +91,7 @@ typedef struct {
   bool select_flag:1;   // Popup button selected
   bool home_flag:1;     // homing in course
   bool heat_flag:1;     // 0: heating done  1: during heating
-  #if ProUI && HAS_LEVELING
+  #if ProUIex && HAS_LEVELING
     bool cancel_abl:1;  // cancel current abl
   #endif
 } HMI_flag_t;
@@ -111,9 +104,6 @@ extern millis_t dwin_heat_time;
 // Popups
 #if HAS_HOTEND || HAS_HEATED_BED
   void DWIN_Popup_Temperature(const bool toohigh);
-#endif
-#if HAS_HOTEND
-  void Popup_Window_ETempTooLow();
 #endif
 #if ENABLED(POWER_LOSS_RECOVERY)
   void Popup_PowerLossRecovery();
@@ -142,6 +132,12 @@ void RebootPrinter();
   void SetBaud115K();
   void SetBaud250K();
 #endif
+#if ENABLED(EEPROM_SETTINGS)
+  void WriteEeprom();
+  void ReadEeprom();
+  void ResetEeprom();
+#endif
+
 
 void HMI_WaitForUser();
 void HMI_SaveProcessID(const uint8_t id);
@@ -154,12 +150,12 @@ void DWIN_CheckStatusMessage();
 void DWIN_StartHoming();
 void DWIN_CompletedHoming();
 #if HAS_MESH
-  void DWIN_MeshUpdate(const int8_t xpos, const int8_t ypos, const float zval);
+  void DWIN_MeshUpdate(const int8_t xpos, const int8_t ypos, const_float_t zval);
 #endif
 void DWIN_MeshLevelingStart();
 void DWIN_CompletedLeveling();
 void DWIN_PidTuning(pidresult_t result);
-void DWIN_Print_Started(const bool sd = false);
+void DWIN_Print_Started(const bool sd=false);
 void DWIN_Print_Pause();
 void DWIN_Print_Resume();
 void DWIN_Print_Finished();
@@ -171,7 +167,7 @@ void DWIN_Progress_Update();
 void DWIN_Print_Header(const char *text);
 void DWIN_SetColorDefaults();
 void DWIN_ApplyColor();
-void DWIN_ApplyColor(const int8_t element, const bool ldef = false);
+void DWIN_ApplyColor(const int8_t element, const bool ldef=false);
 void DWIN_StoreSettings(char *buff);
 void DWIN_LoadSettings(const char *buff);
 void DWIN_SetDataDefaults();
@@ -179,7 +175,7 @@ void DWIN_RebootScreen();
 void DWIN_Gcode(const int16_t codenum);
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button = 0);
+  void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);
   void Draw_Popup_FilamentPurge();
   void Goto_FilamentPurge();
   void HMI_FilamentPurge();

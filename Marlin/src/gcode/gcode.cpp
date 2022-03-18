@@ -280,7 +280,7 @@ void GcodeSuite::dwell(millis_t time) {
     #define G29_MAX_RETRIES 0
   #endif
 
-  #if !ProUI
+  #if !ProUIex
     void GcodeSuite::G29_with_retry() {
       uint8_t retries = G29_MAX_RETRIES;
       while (G29()) { // G29 should return true for failed probes ONLY
@@ -1082,7 +1082,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
     #endif
 
     #if ENABLED(DWIN_LCD_PROUI)
-      case 'C' : DWIN_Gcode(parser.codenum); break;               // ProUI Cn: Custom Gcodes
+      case 'C' : DWIN_Gcode(parser.codenum); break;               // ProUIex Cn: Custom Gcodes
     #endif
 
     default:

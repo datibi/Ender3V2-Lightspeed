@@ -38,7 +38,7 @@
   #include "../lcd/extui/ui_api.h"
 #endif
 
-#if ProUI
+#if ProUIex
   #include "../lcd/e3v2/proui/proui.h"
 #endif
 
@@ -53,7 +53,7 @@ template<class RESPONSE_T, class SENSOR_T>
 class TFilamentMonitor;
 class FilamentSensorEncoder;
 class FilamentSensorSwitch;
-TERN_(ProUI, class FilamentSensorDevice);
+TERN_(ProUIex, class FilamentSensorDevice);
 class RunoutResponseDelayed;
 class RunoutResponseDebounced;
 
@@ -61,7 +61,7 @@ class RunoutResponseDebounced;
 
 typedef TFilamentMonitor<
           TERN(HAS_FILAMENT_RUNOUT_DISTANCE, RunoutResponseDelayed, RunoutResponseDebounced),
-          #if ENABLED(ProUI)
+          #if ProUIex
             FilamentSensorDevice
           #else
             TERN(FILAMENT_MOTION_SENSOR, FilamentSensorEncoder, FilamentSensorSwitch)
@@ -186,7 +186,7 @@ class FilamentSensorBase {
       #define _INIT_RUNOUT_PIN(P,S,U,D) do{ if (ENABLED(U)) SET_INPUT_PULLUP(P); else if (ENABLED(D)) SET_INPUT_PULLDOWN(P); else SET_INPUT(P); }while(0)
       #define  INIT_RUNOUT_PIN(N) _INIT_RUNOUT_PIN(FIL_RUNOUT##N##_PIN, FIL_RUNOUT##N##_STATE, FIL_RUNOUT##N##_PULLUP, FIL_RUNOUT##N##_PULLDOWN)
       #if NUM_RUNOUT_SENSORS >= 1
-        #if ProUI
+        #if ProUIex
           ProEx.SetRunoutState();
         #else
           INIT_RUNOUT_PIN(1);
@@ -224,7 +224,7 @@ class FilamentSensorBase {
       #undef _OR_RUNOUT
     }
 
-    #if !ProUI
+    #if !ProUIex
       // Return a bitmask of runout flag states (1 bits always indicates runout)
       static uint8_t poll_runout_states() {
         return poll_runout_pins() ^ uint8_t(0
@@ -257,7 +257,7 @@ class FilamentSensorBase {
     #endif
 };
 
-#if ProUI
+#if ProUIex
   class FilamentSensorDevice : public FilamentSensorBase {
   private:
     static uint8_t motion_detected;
@@ -350,7 +350,7 @@ class FilamentSensorBase {
         }
     };
   #endif // !FILAMENT_MOTION_SENSOR
-#endif //ProUI
+#endif // ProUIex
 
 /********************************* RESPONSE TYPE *********************************/
 

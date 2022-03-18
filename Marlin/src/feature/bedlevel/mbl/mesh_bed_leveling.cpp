@@ -35,7 +35,7 @@
   mesh_bed_leveling mbl;
 
   float mesh_bed_leveling::z_offset,
-     #if ProUI
+     #if ProUIex
         mesh_bed_leveling::z_values[GRID_LIMIT][GRID_LIMIT],
         mesh_bed_leveling::index_to_xpos[GRID_LIMIT],
         mesh_bed_leveling::index_to_ypos[GRID_LIMIT];

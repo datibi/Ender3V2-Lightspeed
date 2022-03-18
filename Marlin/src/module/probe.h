@@ -29,7 +29,7 @@
 
 #include "motion.h"
 
-#if ProUI
+#if ProUIex
   #include "../lcd/e3v2/proui/dwin.h"
 #endif
 
@@ -192,7 +192,7 @@ public:
       }
     #endif
 
-    #if ProUI
+    #if ProUIex
       static float _min_x(const xy_pos_t &probe_offset_xy = offset_xy);
       static float _max_x(const xy_pos_t &probe_offset_xy = offset_xy);
       static float _min_y(const xy_pos_t &probe_offset_xy = offset_xy);
@@ -241,7 +241,7 @@ public:
       static constexpr xy_pos_t default_probe_xy_offset = xy_pos_t({ default_probe_xyz_offset.x,  default_probe_xyz_offset.y });
 
     public:
-      TERN(ProUI, static, static constexpr) bool can_reach(float x, float y) {
+      TERN(ProUIex, static, static constexpr) bool can_reach(float x, float y) {
         #if IS_KINEMATIC
           return HYPOT2(x, y) <= sq(probe_radius(default_probe_xy_offset));
         #else
@@ -250,7 +250,7 @@ public:
         #endif
       }
 
-      TERN(ProUI, static, static constexpr) bool can_reach(const xy_pos_t &point) { return can_reach(point.x, point.y); }
+      TERN(ProUIex, static, static constexpr) bool can_reach(const xy_pos_t &point) { return can_reach(point.x, point.y); }
     };
 
     #if NEEDS_THREE_PROBE_POINTS

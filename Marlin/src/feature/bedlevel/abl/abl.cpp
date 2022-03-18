@@ -35,7 +35,7 @@
   #include "../../../lcd/extui/ui_api.h"
 #endif
 
-#if ProUI
+#if ProUIex
   #include "../../../lcd/e3v2/proui/proui.h"
 #endif
 
@@ -101,7 +101,7 @@ void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, 
  * using linear extrapolation, away from the center.
  */
 void extrapolate_unprobed_bed_level() {
-  #if ProUI
+  #if ProUIex
     ProEx.abl_extrapolate();
   #else
     #ifdef HALF_IN_X
@@ -154,7 +154,12 @@ void print_bilinear_leveling_grid() {
   #define ABL_GRID_POINTS_VIRT_Y GRID_MAX_CELLS_Y * (BILINEAR_SUBDIVISIONS) + 1
   #define ABL_TEMP_POINTS_X (GRID_MAX_POINTS_X + 2)
   #define ABL_TEMP_POINTS_Y (GRID_MAX_POINTS_Y + 2)
+  #if ProUIex
+    #define ABL_GRID_POINTS_VIRT_N (GRID_LIMIT - 1) * (BILINEAR_SUBDIVISIONS) + 1
+    float z_values_virt[ABL_GRID_POINTS_VIRT_N][ABL_GRID_POINTS_VIRT_N];
+  #else
   float z_values_virt[ABL_GRID_POINTS_VIRT_X][ABL_GRID_POINTS_VIRT_Y];
+  #endif
   xy_pos_t bilinear_grid_spacing_virt;
   xy_float_t bilinear_grid_factor_virt;
 

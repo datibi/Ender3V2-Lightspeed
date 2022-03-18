@@ -585,7 +585,7 @@ void _O2 Endstops::report_states() {
     }
     #undef _CASE_RUNOUT
   #elif HAS_FILAMENT_SENSOR
-    print_es_state(READ(FIL_RUNOUT1_PIN) != TERN(ProUI, HMI_data.Runout_active_state, FIL_RUNOUT_STATE), F(STR_FILAMENT));
+    print_es_state(READ(FIL_RUNOUT1_PIN) != TERN(ProUIex, HMI_data.Runout_active_state, FIL_RUNOUT_STATE), F(STR_FILAMENT));
   #endif
 
   TERN_(BLTOUCH, bltouch._reset_SW_mode());
@@ -1348,7 +1348,7 @@ void Endstops::update() {
         ES_REPORT_CHANGE(K_MAX);
       #endif
       SERIAL_ECHOLNPGM("\n");
-      set_pwm_duty(pin_t(LED_PIN), local_LED_status);
+      hal.set_pwm_duty(pin_t(LED_PIN), local_LED_status);
       local_LED_status ^= 255;
       old_live_state_local = live_state_local;
     }

@@ -44,7 +44,7 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
   bool PrintJobRecovery::dwin_flag; // = false
 #endif
 
-#if ProUI
+#if ProUIex
   #include "../lcd/e3v2/proui/proui.h"
 #endif
 
@@ -455,7 +455,7 @@ void PrintJobRecovery::resume() {
     #endif
   #endif
 
-  #if ProUI
+  #if ProUIex
     ProEx.PowerLoss();
   #endif
 

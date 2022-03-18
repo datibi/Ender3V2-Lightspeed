@@ -1,8 +1,8 @@
 /**
- * DWIN Mesh Viewer
- * Author: Miguel A. Risco-Castillo
- * version: 3.11.1
- * Date: 2022/02/17
+ * Mesh Viewer for PRO UI
+ * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * version: 3.12.1
+ * Date: 2022/02/24
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,8 +26,10 @@
 class MeshViewerClass {
 public:
   float avg, max, min;
-  void Draw();
+  void Draw(bool withsave = false);
   void DrawMesh(bed_mesh_t zval, const uint8_t sizex, const uint8_t sizey);
 };
 
 extern MeshViewerClass MeshViewer;
+
+void Goto_MeshViewer();

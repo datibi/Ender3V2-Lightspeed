@@ -704,7 +704,7 @@ void restore_feedrate_and_scaling() {
     OPTARG(HAS_HOTEND_OFFSET, const uint8_t old_tool_index/*=0*/, const uint8_t new_tool_index/*=0*/)
   ) {
 
-    #if ProUI
+    #if ProUIex
 
       ProEx.UpdateAxis(axis);
 

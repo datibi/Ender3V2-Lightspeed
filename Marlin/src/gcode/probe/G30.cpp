@@ -30,6 +30,10 @@
 #include "../../feature/bedlevel/bedlevel.h"
 #include "../../lcd/marlinui.h"
 
+#if HAS_PTC
+  #include "../../feature/probe_temp_comp.h"
+#endif
+
 /**
  * G30: Do a single Z probe at the current XY
  *
@@ -38,6 +42,7 @@
  *   X   Probe X position (default current X)
  *   Y   Probe Y position (default current Y)
  *   E   Engage the probe for each probe (default 1)
+ *   C   Enable probe temperature compensation (0 or 1, default 1)
  */
 void GcodeSuite::G30() {
 
@@ -60,7 +65,10 @@ void GcodeSuite::G30() {
   TERN_(DWIN_LCD_PROUI, gcode.process_subcommands_now(F("G28O"));)
 
   const ProbePtRaise raise_after = parser.boolval('E', true) ? PROBE_PT_STOW : PROBE_PT_NONE;
+
+  TERN_(HAS_PTC, ptc.set_enabled(!parser.seen('C') || parser.value_bool()));
   const float measured_z = probe.probe_at_point(pos, raise_after, 1);
+  TERN_(HAS_PTC, ptc.set_enabled(true));
   if (!isnan(measured_z)) {
     SERIAL_ECHOLNPGM("Bed X: ", pos.x, " Y: ", pos.y, " Z: ", measured_z);
     #if ENABLED(DWIN_LCD_PROUI)

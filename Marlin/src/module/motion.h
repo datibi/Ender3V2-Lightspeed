@@ -122,7 +122,7 @@ extern int16_t feedrate_percentage;
 inline float pgm_read_any(const float *p)   { return TERN(__IMXRT1062__, *p, pgm_read_float(p)); }
 inline int8_t pgm_read_any(const int8_t *p) { return TERN(__IMXRT1062__, *p, pgm_read_byte(p)); }
 
-#if ProUI
+#if ProUIex
   #define XYZ_DEFS(T, NAME, OPT) \
     inline T NAME(const AxisEnum axis) { \
       const XYZval<T> Value = LINEAR_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT); \
@@ -274,9 +274,11 @@ void report_current_position_projected();
   void report_current_position_moving();
 
   #if ENABLED(FULL_REPORT_TO_HOST_FEATURE)
-    inline void set_and_report_grblstate(const M_StateEnum state) {
-      M_State_grbl = state;
-      report_current_grblstate_moving();
+    inline void set_and_report_grblstate(const M_StateEnum state, const bool force=true) {
+      if (force || M_State_grbl != state) {
+        M_State_grbl = state;
+        report_current_grblstate_moving();
+      }
     }
   #endif
 

@@ -1,7 +1,7 @@
 /**
- * Lock screen implementation for DWIN UI Enhanced implementation
- * Author: Miguel A. Risco-Castillo
- * version: 2.1
+ * Lock screen implementation for PRO UI
+ * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Version: 2.1
  * Date: 2021/11/09
  *
  * This program is free software: you can redistribute it and/or modify

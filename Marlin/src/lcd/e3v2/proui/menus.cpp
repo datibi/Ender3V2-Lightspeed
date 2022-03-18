@@ -1,8 +1,8 @@
 /**
  * Menu functions for ProUI
  * Author: Miguel A. Risco-Castillo
- * Version: 1.1.1
- * Date: 2022/02/12
+ * Version: 1.2.1
+ * Date: 2022/02/25
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -42,7 +42,7 @@ void Draw_Title(TitleClass* title) {
 }
 
 void Draw_Menu(MenuClass* menu) {
-  DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color);
+  DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.StatusBg_Color);
   DWIN_Draw_Rectangle(1, DWINUI::backcolor, 0, TITLE_HEIGHT, DWIN_WIDTH - 1, STATUS_Y - 1);
 }
 
@@ -345,4 +345,4 @@ void HMI_SetPFloat() {
   }
 }
 
-#endif
+#endif // DWIN_LCD_PROUI

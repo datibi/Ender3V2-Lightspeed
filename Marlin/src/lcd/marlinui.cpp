@@ -177,6 +177,15 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   volatile int8_t encoderDiff; // Updated in update_buttons, added to encoderPosition every LCD update
 #endif
 
+#if LCD_BACKLIGHT_TIMEOUT
+  uint16_t MarlinUI::lcd_backlight_timeout; // Initialized by settings.load()
+  millis_t MarlinUI::backlight_off_ms = 0;
+  void MarlinUI::refresh_backlight_timeout() {
+    backlight_off_ms = lcd_backlight_timeout ? millis() + lcd_backlight_timeout * 1000UL : 0;
+    WRITE(LCD_BACKLIGHT_PIN, HIGH);
+  }
+#endif
+
 void MarlinUI::init() {
 
   init_lcd();
@@ -622,7 +631,7 @@ void MarlinUI::init() {
           next_filament_display = millis() + 5000UL;  // Show status message for 5s
         #endif
         goto_screen(menu_main);
-        IF_DISABLED(NO_LCD_REINIT, init_lcd()); // May revive the LCD if static electricity killed it
+        reinit_lcd(); // Revive a noisy shared SPI LCD
         return;
       }
 
@@ -1030,14 +1039,18 @@ void MarlinUI::init() {
 
           reset_status_timeout(ms);
 
+          #if LCD_BACKLIGHT_TIMEOUT
+            refresh_backlight_timeout();
+          #endif
+
           refresh(LCDVIEW_REDRAW_NOW);
 
           #if LED_POWEROFF_TIMEOUT > 0
             if (!powerManager.psu_on) leds.reset_timeout(ms);
           #endif
-        }
+        } // encoder activity
 
-      #endif
+      #endif // HAS_ENCODER_ACTION
 
       // This runs every ~100ms when idling often enough.
       // Instead of tracking changes just redraw the Status Screen once per second.
@@ -1132,6 +1145,13 @@ void MarlinUI::init() {
           reset_status_timeout(ms);
         else if (ELAPSED(ms, return_to_status_ms))
           return_to_status();
+      #endif
+
+      #if LCD_BACKLIGHT_TIMEOUT
+        if (backlight_off_ms && ELAPSED(ms, backlight_off_ms)) {
+          WRITE(LCD_BACKLIGHT_PIN, LOW); // Backlight off
+          backlight_off_ms = 0;
+        }
       #endif
 
       // Change state of drawing flag between screen updates
@@ -1421,7 +1441,7 @@ void MarlinUI::init() {
     else if (!no_welcome)
       msg = GET_TEXT_F(WELCOME_MSG);
     else
-      return;
+      TERN(DWIN_LCD_PROUI, msg = F(""), return);
 
     set_status(msg, -1);
   }
@@ -1693,9 +1713,7 @@ void MarlinUI::init() {
       }
     }
 
-    #if PIN_EXISTS(SD_DETECT) && DISABLED(NO_LCD_REINIT)
-      init_lcd(); // Revive a noisy shared SPI LCD
-    #endif
+    reinit_lcd(); // Revive a noisy shared SPI LCD
 
     refresh();
 

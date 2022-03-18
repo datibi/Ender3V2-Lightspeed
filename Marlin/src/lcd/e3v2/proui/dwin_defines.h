@@ -1,8 +1,8 @@
 /**
- * DWIN general defines and data structs
- * Author: Miguel A. Risco-Castillo
- * Version: 3.10.3
- * Date: 2022/02/02
+ * DWIN general defines and data structs for PRO UI
+ * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Version: 3.11.3
+ * Date: 2022/02/28
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -21,16 +21,40 @@
 
 #pragma once
 
-#define ProUI 1
+#define ProUIex 1
 
 //#define DEBUG_DWIN 1
 //#define NEED_HEX_PRINT 1
 
+#include "../../../inc/MarlinConfigPre.h"
+#include <stddef.h>
 #include "../../../core/types.h"
 #include "../common/dwin_color.h"
 
-#if ProUI
+#if ProUIex
   #include "proui.h"
+  #define HAS_GCODE_PREVIEW 1
+#endif
+
+#define HAS_ESDIAG 1
+
+#if DISABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
+  #error "INDIVIDUAL_AXIS_HOMING_SUBMENU is required with ProUI."
+#endif
+#if DISABLED(LCD_SET_PROGRESS_MANUALLY)
+  #error "LCD_SET_PROGRESS_MANUALLY is required with ProUI."
+#endif
+#if DISABLED(STATUS_MESSAGE_SCROLLING)
+  #error "STATUS_MESSAGE_SCROLLING is required with ProUI."
+#endif
+#if DISABLED(BAUD_RATE_GCODE)
+  #error "BAUD_RATE_GCODE is required with ProUI."
+#endif
+#if DISABLED(SOUND_MENU_ITEM)
+  #error "SOUND_MENU_ITEM is required with ProUI."
+#endif
+#if DISABLED(PRINTCOUNTER)
+  #error "PRINTCOUNTER is required with ProUI."
 #endif
 
 #define Def_Background_Color  RGB( 1, 12,  8)
@@ -51,31 +75,10 @@
 #define Def_Barfill_Color     BarFill_Color
 #define Def_Indicator_Color   Color_White
 #define Def_Coordinate_Color  Color_White
-
-#define HAS_GCODE_PREVIEW 1
-#define HAS_ESDIAG 1
-#ifndef INDIVIDUAL_AXIS_HOMING_SUBMENU
-  #define INDIVIDUAL_AXIS_HOMING_SUBMENU
-#endif
-#ifndef LCD_SET_PROGRESS_MANUALLY
-  #define LCD_SET_PROGRESS_MANUALLY
-#endif
-#ifndef STATUS_MESSAGE_SCROLLING
-  #define STATUS_MESSAGE_SCROLLING
-#endif
-#ifndef BAUD_RATE_GCODE
-  #define BAUD_RATE_GCODE
-#endif
-#ifndef HAS_LCD_BRIGHTNESS
-  #define HAS_LCD_BRIGHTNESS 1
-#endif
-#define LCD_BRIGHTNESS_DEFAULT 127
-#ifndef SOUND_MENU_ITEM
-  #define SOUND_MENU_ITEM
-#endif
+#define Def_Button_Color      RGB( 0, 23, 16)
 
 typedef struct {
-// Color settings
+  // Color settings
   uint16_t Background_Color = Def_Background_Color;
   uint16_t Cursor_color = Def_Cursor_color;
   uint16_t TitleBg_color = Def_TitleBg_color;
@@ -107,12 +110,13 @@ typedef struct {
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     int16_t ExtMinT = EXTRUDE_MINTEMP;
   #endif
-  #if ENABLED(PREHEAT_BEFORE_LEVELING) && defined(PREHEAT_1_TEMP_BED)
-    int16_t BedLevT = PREHEAT_1_TEMP_BED;
-  #endif
+  int16_t BedLevT = TERN0(PREHEAT_1_TEMP_BED, PREHEAT_1_TEMP_BED);
   TERN_(BAUD_RATE_GCODE, bool Baud115K = false);
   bool FullManualTramming = false;
-  #if ProUI
+  #ifdef MESH_BED_LEVELING
+    float ManualZOffset = 0;
+  #endif
+  #if ProUIex
     TERN_(HAS_FILAMENT_SENSOR, bool Runout_active_state = FIL_RUNOUT_STATE);
     #if ENABLED(NOZZLE_PARK_FEATURE)
       xyz_int_t Park_point = DEF_NOZZLE_PARK_POINT;
@@ -142,7 +146,7 @@ extern HMI_data_t HMI_data;
   #define LEVELING_BED_TEMP HMI_data.BedLevT
 #endif
 
-#if ProUI
+#if ProUIex
   #undef X_BED_SIZE
   #undef Y_BED_SIZE
   #undef X_MIN_POS
